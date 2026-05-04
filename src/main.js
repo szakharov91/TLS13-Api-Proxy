@@ -3,14 +3,19 @@ const axios = require('axios');
 const config = require('./config');
 
 const app = express();
-const PORT = config.port || 5555;
 
-// чтобы читать JSON из тела запроса
 app.use(express.json());
+
+app.use((req, res, next) => {
+  const key = req.headers['x-client-api-key'];
+  if (!key || !config.clientKeys.includes(key)) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+});
 
 app.post('/esia', async (req, res) => {
   try {
-
     const requestUrl = req.headers['x-target-url'];
     if (!requestUrl) {
       return res.status(400).json({ error: 'Missing X-Target-URL header' });
@@ -18,10 +23,10 @@ app.post('/esia', async (req, res) => {
 
     const response = await axios.post(
       requestUrl,
-      req.body, // проксируем тело как есть
+      req.body,
       {
         headers: {
-          Authorization: req.headers.authorization, // пробрасываем токен
+          Authorization: req.headers.authorization,
           'Content-Type': 'application/json',
           'Accept': '*/*'
         }
@@ -31,15 +36,18 @@ app.post('/esia', async (req, res) => {
     res.status(response.status).json(response.data);
   } catch (err) {
     if (err.response) {
-      // если API вернул ошибку — пробрасываем её
       res.status(err.response.status).json(err.response.data);
     } else {
-      // если что-то пошло не так на уровне сети
       res.status(500).json({ error: err.message });
     }
   }
 });
 
-    app.listen(PORT, () => {
+module.exports = app;
+
+if (require.main === module) {
+  const PORT = config.port || 5555;
+  app.listen(PORT, () => {
     console.log('Proxy running on http://localhost:' + PORT);
-});
+  });
+}
