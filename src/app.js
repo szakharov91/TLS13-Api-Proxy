@@ -14,7 +14,7 @@ function createApp(clientKeys) {
     next();
   });
 
-  app.post('/esia', async (req, res) => {
+  app.post('/', async (req, res) => {
     try {
       const requestUrl = req.headers['x-target-url'];
       if (!requestUrl) {
