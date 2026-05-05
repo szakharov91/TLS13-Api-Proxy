@@ -23,7 +23,7 @@ describe('Auth middleware', () => {
 
   test('rejects request with unknown key', async () => {
     const res = await request(app)
-      .post('/esia')
+      .post('/')
       .set('x-client-api-key', 'bad-key');
     expect(res.status).toBe(401);
     expect(res.body).toEqual({ error: 'Unauthorized' });
@@ -32,7 +32,7 @@ describe('Auth middleware', () => {
   test('passes request with valid key', async () => {
     axios.post.mockResolvedValueOnce({ status: 200, data: {} });
     const res = await request(app)
-      .post('/esia')
+      .post('/')
       .set(authHeaders({ 'x-target-url': TARGET_URL }));
     expect(res.status).toBe(200);
   });
@@ -48,10 +48,10 @@ describe('Auth middleware', () => {
   });
 });
 
-describe('POST /esia', () => {
+describe('POST /', () => {
   test('returns 400 when x-target-url header is missing', async () => {
     const res = await request(app)
-      .post('/esia')
+      .post('/')
       .set(authHeaders());
     expect(res.status).toBe(400);
     expect(res.body).toEqual({ error: 'Missing X-Target-URL header' });
@@ -63,7 +63,7 @@ describe('POST /esia', () => {
     axios.post.mockResolvedValueOnce({ status: 200, data: upstreamData });
 
     const res = await request(app)
-      .post('/esia')
+      .post('/')
       .set(authHeaders({ 'x-target-url': TARGET_URL, authorization: 'Bearer token123' }))
       .send(body);
 
@@ -88,7 +88,7 @@ describe('POST /esia', () => {
     axios.post.mockRejectedValueOnce(err);
 
     const res = await request(app)
-      .post('/esia')
+      .post('/')
       .set(authHeaders({ 'x-target-url': TARGET_URL }));
 
     expect(res.status).toBe(422);
@@ -100,7 +100,7 @@ describe('POST /esia', () => {
     axios.post.mockRejectedValueOnce(err);
 
     const res = await request(app)
-      .post('/esia')
+      .post('/')
       .set(authHeaders({ 'x-target-url': TARGET_URL }));
 
     expect(res.status).toBe(500);
@@ -111,7 +111,7 @@ describe('POST /esia', () => {
     axios.post.mockResolvedValueOnce({ status: 204, data: {} });
 
     const res = await request(app)
-      .post('/esia')
+      .post('/')
       .set(authHeaders({ 'x-target-url': TARGET_URL }));
 
     expect(res.status).toBe(204);
