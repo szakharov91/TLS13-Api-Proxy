@@ -16,7 +16,7 @@ function authHeaders(extra = {}) {
 
 describe('Auth middleware', () => {
   test('rejects request without x-client-api-key', async () => {
-    const res = await request(app).post('/esia');
+    const res = await request(app).post('/');
     expect(res.status).toBe(401);
     expect(res.body).toEqual({ error: 'Unauthorized' });
   });
@@ -41,7 +41,7 @@ describe('Auth middleware', () => {
     for (const key of config.clientKeys) {
       axios.post.mockResolvedValueOnce({ status: 200, data: {} });
       const res = await request(app)
-        .post('/esia')
+        .post('/')
         .set({ 'x-client-api-key': key, 'x-target-url': TARGET_URL });
       expect(res.status).toBe(200);
     }
