@@ -6,13 +6,19 @@
   "name": "tls13-api-proxy",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "src/main.js",
   "devDependencies": {
+    "@yao-pkg/pkg": "^5.15.0",
     "jest": "^30.3.0",
     "supertest": "^7.2.2"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "pkg src/main.js --targets node20-linux-x64,node20-macos-x64,node20-win-x64 --out-path dist"
+  },
+  "pkg": {
+    "assets": [],
+    "outputPath": "dist"
   },
   "repository": {
     "type": "git",
