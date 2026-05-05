@@ -14,7 +14,7 @@
   },
   "scripts": {
     "test": "jest",
-    "build": "pkg src/main.js --targets node20-linux-x64,node20-macos-x64,node20-win-x64 --out-path dist"
+    "build": "pkg src/main.js --target node20-linux-x64 --output dist/tls13apiproxy-linux && pkg src/main.js --target node20-macos-x64 --output dist/tls13apiproxy-macos && pkg src/main.js --target node20-win-x64 --output dist/tls13apiproxy-win.exe"
   },
   "pkg": {
     "assets": [],
