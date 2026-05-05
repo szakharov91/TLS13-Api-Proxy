@@ -1,10 +1,13 @@
 const request = require('supertest');
-const app = require('../src/main');
+const createApp = require('../src/app');
+const config = require('../src/config');
 
 jest.mock('axios');
 const axios = require('axios');
 
-const VALID_KEY = 'key1';
+const app = createApp(config.clientKeys);
+
+const VALID_KEY = config.clientKeys[0];
 const TARGET_URL = 'https://esia.example.com/api';
 
 function authHeaders(extra = {}) {
@@ -35,7 +38,6 @@ describe('Auth middleware', () => {
   });
 
   test('accepts all configured client keys', async () => {
-    const config = require('../src/config');
     for (const key of config.clientKeys) {
       axios.post.mockResolvedValueOnce({ status: 200, data: {} });
       const res = await request(app)
