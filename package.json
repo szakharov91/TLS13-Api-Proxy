@@ -4,7 +4,7 @@
     "express": "^5.2.1"
   },
   "name": "tls13-api-proxy",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "src/main.js",
   "devDependencies": {
